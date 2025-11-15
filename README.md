@@ -1,7 +1,7 @@
 # Backend API - Laboratorium 1
 
 **Autor:** [Anna]
-**Grupa:** [IMN]
+**Grupa:** [INMN2(hybryda)_PAW2]
 
 ## Opis projektu
 Proste REST API stworzone na zajęciach z backend development.
