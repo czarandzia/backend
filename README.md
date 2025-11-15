@@ -7,7 +7,7 @@
 Proste REST API stworzone na zajęciach z backend development.
 
 ## Technologie
-- [PHP]
+- [JavaScript]
 - [Framework - jeśli używany]
 
 ## Endpointy
