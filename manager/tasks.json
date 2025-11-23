@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Zadanie 1",
+    "description": "Opis zadania 1",
+    "completed": false,
+    "createdAt": "2025-11-23T17:36:18.848Z"
+  },
+  {
+    "id": 2,
+    "title": "Zadanie 2",
+    "description": "Opis zadania 2",
+    "completed": true,
+    "createdAt": "2025-11-23T17:36:18.848Z"
+  },
+  {
+    "id": 3,
+    "title": "Zadanie 3",
+    "description": "Opis zadania 3",
+    "completed": true,
+    "createdAt": "2025-11-23T17:38:28.158Z"
+  }
+]
