@@ -7,8 +7,9 @@ app.use(express.json());
 
 // Dane w pamięci (tymczasowo)
 let data = [
-  { id: 1, name: "Element 1" },
-  { id: 2, name: "Element 2" }
+  { id: 1, name: "Element 1", description: "Opis 1" },
+  { id: 2, name: "Element 2", description: "Opis 2" },
+  { id: 3, name: "Element 3", description: "Opis 3" }
 ];
 
 // 1. Health endpoint
@@ -28,7 +29,8 @@ app.get('/data', (req, res) => {
 app.post('/data', (req, res) => {
   const newItem = {
     id: data.length + 1,
-    name: req.body.name
+    name: req.body.name,
+    description: req.body.description
   };
   data.push(newItem);
   res.status(201).json(newItem);
