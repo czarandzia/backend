@@ -1,0 +1,21 @@
+# Konfiguracja API Tester
+api:
+  url: "http://localhost:3000"
+  timeout: 30s
+
+# Uzytkownicy do testow (min. 2 zwyklych + 1 admin)
+users:
+  - email: "user1@example.com"
+    password: "User1Pass123!"
+    role: "user"
+  - email: "user2@example.com"
+    password: "User2Pass123!"
+    role: "user"
+  - email: "admin@example.com"
+    password: "AdminPass123!"
+    role: "admin"
+
+# Raport
+report:
+  output: "raport.txt"
+  verbose: false

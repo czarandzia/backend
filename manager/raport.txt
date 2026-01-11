@@ -1,0 +1,373 @@
+========================================
+ RAPORT TESTOW API - ToDo Application
+ Data: 2026-01-11 22:15:34
+ URL: http://localhost:3000
+========================================
+
+PODSUMOWANIE
+------------
+Testy wykonane: 64
+Sukces: 58 (91%)
+Bledy: 5 (9%)
+Pominiete: 1
+
+SZCZEGOLY TESTOW
+----------------
+
+[SETUP] Uzytkownik user1@example.com juz istnieje
+  Status: PASS
+  Request: Logowanie OK
+  Czas: 350ms
+
+[SETUP] Uzytkownik user2@example.com juz istnieje
+  Status: PASS
+  Request: Logowanie OK
+  Czas: 233ms
+
+[SETUP] Uzytkownik admin@example.com juz istnieje
+  Status: PASS
+  Request: Logowanie OK
+  Czas: 249ms
+
+[BASIC] Test polaczenia z serwerem
+  Status: PASS
+  Request: GET /health
+  Czas: 1ms
+
+[BASIC] Test endpointu /health
+  Status: PASS
+  Request: GET /health
+  Czas: 2ms
+
+[BASIC] Test nieistniejacego endpointu
+  Status: PASS
+  Request: GET /nieistniejacy/endpoint/12345
+  Czas: 1ms
+
+[BASIC] Test bez autoryzacji
+  Status: PASS
+  Request: GET /tasks (bez tokena)
+  Czas: 1ms
+
+[BASIC] Test nieprawidlowego tokena
+  Status: PASS
+  Request: GET /tasks (zly token)
+  Czas: 74ms
+
+[BASIC] Test wygaslego tokena
+  Status: PASS
+  Request: GET /tasks (wygasly token)
+  Czas: 61ms
+
+[BASIC] Test metody OPTIONS
+  Status: PASS
+  Request: OPTIONS /tasks
+  Czas: 2ms
+
+[BASIC] Test metody HEAD
+  Status: PASS
+  Request: HEAD /health
+  Czas: 1ms
+
+[HAPPY-PATH] Logowanie user1 (user1@example.com)
+  Status: PASS
+  Request: POST /auth/login {email: user1@example.com}
+  Czas: 241ms
+
+[HAPPY-PATH] Utworzenie taska przez user1
+  Status: PASS
+  Request: POST /tasks {title: Task uzytkownika 1}
+  Czas: 280ms
+
+[HAPPY-PATH] Pobranie listy taskow przez user1
+  Status: PASS
+  Request: GET /tasks (zwrocono 8 taskow)
+  Czas: 269ms
+
+[HAPPY-PATH] Logowanie user2 (user2@example.com)
+  Status: PASS
+  Request: POST /auth/login {email: user2@example.com}
+  Czas: 247ms
+
+[HAPPY-PATH] user2 NIE widzi taska innego uzytkownika
+  Status: PASS
+  Request: GET /tasks (brak cudzych taskow)
+  Czas: 222ms
+
+[HAPPY-PATH] Utworzenie taska przez user2
+  Status: PASS
+  Request: POST /tasks {title: Task uzytkownika 2}
+  Czas: 203ms
+
+[HAPPY-PATH] user1 NIE widzi taska innego uzytkownika (odwrotnie)
+  Status: PASS
+  Request: GET /tasks (brak cudzych taskow)
+  Czas: 259ms
+
+[HAPPY-PATH] user1 nie moze PATCH cudzego taska
+  Status: PASS
+  Request: PATCH /tasks/9f22df44-3a7c-45d6-b8a0-ddd79e794774 (404 - nie widzi taska)
+  Czas: 1ms
+
+[HAPPY-PATH] user1 nie moze DELETE cudzego taska
+  Status: PASS
+  Request: DELETE /tasks/9f22df44-3a7c-45d6-b8a0-ddd79e794774
+  Czas: 245ms
+
+[HAPPY-PATH] Aktualizacja taska przez user1
+  Status: FAIL
+  Request: PATCH /tasks/219e6a36-703a-4bf5-ad57-808c3b66046b
+  Czas: 1ms
+  Oczekiwano: 200 OK z completed: true
+  Otrzymano: 404: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot PATCH /tasks/219e6a36-703a-4bf5-ad57-808c3b66046b</pre>
+</body>
+</html>
+
+  Problem: Task nie zostal zaktualizowany
+  Rekomendacja: Sprawdz obsluge PATCH /tasks/:id
+
+[HAPPY-PATH] Usuniecie taska przez user1
+  Status: FAIL
+  Request: DELETE /tasks/219e6a36-703a-4bf5-ad57-808c3b66046b
+  Czas: 211ms
+  Oczekiwano: 204 No Content
+  Otrzymano: 500
+  Problem: Task nie zostal usuniety
+  Rekomendacja: Sprawdz obsluge DELETE /tasks/:id
+
+[HAPPY-PATH] Logowanie admin (admin@example.com)
+  Status: PASS
+  Request: POST /auth/login {email: admin@example.com}
+  Czas: 205ms
+
+[HAPPY-PATH] Admin widzi wszystkie taski
+  Status: PASS
+  Request: GET /tasks (jako admin)
+  Czas: 212ms
+
+[HAPPY-PATH] Admin moze PATCH dowolny task
+  Status: FAIL
+  Request: PATCH /tasks/9f22df44-3a7c-45d6-b8a0-ddd79e794774 (jako admin)
+  Czas: 2ms
+  Oczekiwano: 200/204
+  Otrzymano: 404
+  Problem: Admin nie ma dostepu do wszystkich taskow
+  Rekomendacja: Sprawdz logike uprawnien dla roli admin
+
+[HAPPY-PATH] Admin moze DELETE dowolny task
+  Status: PASS
+  Request: DELETE /tasks/9f22df44-3a7c-45d6-b8a0-ddd79e794774 (jako admin)
+  Czas: 303ms
+
+[HAPPY-PATH] Admin widzi liste uzytkownikow
+  Status: PASS
+  Request: GET /admin/users (zwrocono 10 uzytkownikow)
+  Czas: 203ms
+
+[OWASP] Security Headers
+  Status: PASS
+  Request: Znalezione: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Strict-Transport-Security, Content-Security-Policy
+  Czas: 2ms
+
+[OWASP] SQL Injection: Classic OR
+  Status: PASS
+  Request: POST /auth/login (kod: 401)
+  Czas: 62ms
+
+[OWASP] SQL Injection: Comment injection
+  Status: PASS
+  Request: POST /auth/login (kod: 401)
+  Czas: 56ms
+
+[OWASP] SQL Injection: DROP TABLE
+  Status: PASS
+  Request: POST /auth/login (kod: 401)
+  Czas: 22ms
+
+[OWASP] SQL Injection: UNION SELECT
+  Status: PASS
+  Request: POST /auth/login (kod: 429)
+  Czas: 2ms
+
+[OWASP] SQL Injection: Stacked queries
+  Status: PASS
+  Request: POST /auth/login (kod: 429)
+  Czas: 1ms
+
+[OWASP] SQL Injection w Task ID: 1; DROP TABLE t
+  Status: PASS
+  Request: GET /tasks/... (kod: 401)
+  Czas: 1ms
+
+[OWASP] SQL Injection w Task ID: 1 OR 1=1
+  Status: PASS
+  Request: GET /tasks/... (kod: 401)
+  Czas: 2ms
+
+[OWASP] SQL Injection w Task ID: 1' OR '1'='1
+  Status: PASS
+  Request: GET /tasks/... (kod: 401)
+  Czas: 1ms
+
+[OWASP] SQL Injection w Task ID: 1; DELETE FROM 
+  Status: PASS
+  Request: GET /tasks/... (kod: 401)
+  Czas: 1ms
+
+[OWASP] XSS w tytule taska: Script tag
+  Status: PASS
+  Request: Nieoczekiwany kod: 401
+  Czas: 2ms
+
+[OWASP] XSS w tytule taska: Img onerror
+  Status: PASS
+  Request: Nieoczekiwany kod: 401
+  Czas: 2ms
+
+[OWASP] XSS w tytule taska: SVG onload
+  Status: PASS
+  Request: Nieoczekiwany kod: 401
+  Czas: 2ms
+
+[OWASP] XSS w tytule taska: Event handler
+  Status: PASS
+  Request: Nieoczekiwany kod: 401
+  Czas: 1ms
+
+[OWASP] XSS w tytule taska: JavaScript URL
+  Status: PASS
+  Request: Nieoczekiwany kod: 401
+  Czas: 3ms
+
+[OWASP] XSS w tytule taska: Data URL
+  Status: PASS
+  Request: Nieoczekiwany kod: 401
+  Czas: 1ms
+
+[OWASP] XSS w polu email
+  Status: PASS
+  Request: Kod: 429
+  Czas: 2ms
+
+[OWASP] Slabe haslo: '123'
+  Status: PASS
+  Request: Kod: 429
+  Czas: 1ms
+
+[OWASP] Slabe haslo: 'password'
+  Status: PASS
+  Request: Kod: 429
+  Czas: 2ms
+
+[OWASP] Slabe haslo: 'abc'
+  Status: PASS
+  Request: Kod: 429
+  Czas: 1ms
+
+[OWASP] Slabe haslo: '1234'
+  Status: PASS
+  Request: Kod: 429
+  Czas: 2ms
+
+[OWASP] Slabe haslo: 'qwerty'
+  Status: PASS
+  Request: Kod: 429
+  Czas: 1ms
+
+[OWASP] Brute-force: 10 prob w 0.0s
+  Status: PASS
+  Request: Rate limiting aktywny (0 z 10 zaakceptowanych)
+  Czas: 12ms
+
+[OWASP] Token manipulation
+  Status: SKIP
+
+[OWASP] Rate limiting: 100 requestow w 0.1s
+  Status: PASS
+  Request: Rate limiting aktywny (62 z 100 zablokowanych)
+  Czas: 96ms
+
+[OWASP] Payload: bardzo dlugi title (10,000 znakow)
+  Status: PASS
+  Request: Kod: 429
+  Czas: 3ms
+
+[OWASP] Payload: bardzo dlugi email (1,000 znakow)
+  Status: PASS
+  Request: Kod: 429
+  Czas: 2ms
+
+[OWASP] Payload: duzy body JSON (1MB)
+  Status: PASS
+  Request: Payload Too Large (413)
+  Czas: 6ms
+
+[OWASP] Payload: duze headery (64KB)
+  Status: PASS
+  Request: Request odrzucony
+  Czas: 2ms
+
+[OWASP] Payload: zagniezdzone JSON (100 poziomow)
+  Status: PASS
+  Request: Zaakceptowany (kod: 429) - sprawdz reczenie
+  Czas: 2ms
+
+[OWASP] Payload: specjalne znaki Unicode
+  Status: PASS
+  Request: Kod: 429 - sprawdz sanityzacje
+  Czas: 1ms
+
+[OWASP] Payload: null bytes w stringu
+  Status: PASS
+  Request: Kod: 429
+  Czas: 2ms
+
+[OWASP] Payload: puste body dla POST
+  Status: PASS
+  Request: Kod: 429
+  Czas: 2ms
+
+[OWASP] Payload: nieprawidlowy JSON
+  Status: PASS
+  Request: Nieprawidlowy JSON odrzucony (400)
+  Czas: 2ms
+
+[OWASP] Payload: zly Content-Type (text/plain z JSON)
+  Status: PASS
+  Request: Kod: 429
+  Czas: 2ms
+
+[SCHEMA] Schemat GET /health
+  Status: FAIL
+  Request: GET /health
+  Czas: 1ms
+  Oczekiwano: 200 OK
+  Otrzymano: Blad lub kod: 429
+  Problem: Endpoint /health nie dziala
+  Rekomendacja: Sprawdz endpoint /health
+
+[SCHEMA] Schemat POST /auth/login
+  Status: FAIL
+  Request: POST /auth/login
+  Czas: 2ms
+  Oczekiwano: 200 OK
+  Otrzymano: Blad lub kod: 429
+  Problem: Logowanie nie powiodlo sie
+  Rekomendacja: Sprawdz endpoint /auth/login
+
+LISTA WYKRYTYCH PROBLEMOW
+-------------------------
+1. [CRITICAL] Schemat POST /auth/login - Logowanie nie powiodlo sie
+2. [HIGH] Admin moze PATCH dowolny task - Admin nie ma dostepu do wszystkich taskow
+3. [MEDIUM] Aktualizacja taska przez user1 - Task nie zostal zaktualizowany
+4. [MEDIUM] Usuniecie taska przez user1 - Task nie zostal usuniety
+5. [MEDIUM] Schemat GET /health - Endpoint /health nie dziala
+
+Dadane przeze mnie uwagi - testowane w postmanie i użytkownik może zaktualizować task oraz usunąć task, a admin może wyświetlić wszystkie taski
